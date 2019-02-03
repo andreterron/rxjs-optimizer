@@ -1,28 +1,28 @@
 # RxJS Optimizers
 
-A collection of operators and methods to help optimize RxJS based development
+A collection of operators and methods to help optimize RxJS based development.
 
-## Get Started
+# Get Started
 
 ```
 npm install --save rxjs-optimizers
 yarn add rxjs-optimizers
 ```
 
-## List of optimizers
+# List of optimizers
 
-### Filter Unchanged
+## Filter Unchanged
 
 Filter unchanged values to avoid re-processing for the same input
 
-#### Usage:
+### Usage:
 
 ```ts
 observable.pipe(filterUnchanged());
 observable.pipe(filterUnchanged((a,b) => a !== b)); // custom change check
 ```
 
-#### Parameters and Options:
+### Parameters and Options:
 
 ```ts
 filterUnchangable(
@@ -35,24 +35,24 @@ filterUnchangable(
 )
 ```
 
-### Cache
+## Cache Pipe
 
-Filter unchanged values to avoid re-processing for the same input
+Given a list of operators (eg. `map()`, `filter()`, `switchMap()`, ...), it will cache the final output value given the the initial inputs, so that if the input goes back to a previous input, it will bypass the operators, and send the cached value before running the operators.
 
-#### Usage:
+### Usage:
 
 ```ts
-observable.pipe(cache(...operators));
+observable.pipe(cachePipe(...operators));
 
 // custom options
-let smallCache = cache.options({cacheSize: 2});
+let smallCache = cachePipe.options({cacheSize: 2});
 observable.pipe(smallCache(...operators));
 ```
 
-#### Parameters and Options:
+### Parameters and Options:
 
 ```ts
-cache.options({
+cachePipe.options({
     /** cacheSize
      * number of input/output pair to keep in the cache
      * @type: number
@@ -69,21 +69,21 @@ cache.options({
 })
 ```
 
-## Other optimizer ideas
+# Other optimizer ideas
 
-#### Subscribe Once
+### Subscribe Once
 
 wraps an observable, and only subscribes once to it, regardless of how many subscribers the wrapper has
 
-#### Preload
+### Preload
 
 Similar to cache, but given the preloading inputs, once the first output goes through, starts loading the other possible inputs, and caches the outputs
 
-#### Keep Alive
+### Keep Alive
 
 Similar to preload, but once it preloads something, it stays subscribed to the other options while the end observable is also subscribed to
 
-## Building, testing and collaborating
+# Building, testing and collaborating
 
 * Clone the repo
 * Build: `tsc`
