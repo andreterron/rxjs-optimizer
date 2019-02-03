@@ -1,0 +1,21 @@
+{
+  "name": "rxjs-optimizer",
+  "version": "1.0.0",
+  "description": "Optimizer operations for RxJs",
+  "main": "index.js",
+  "repository": "https://github.com/andreterron/rxjs-optimizer",
+  "author": "Andre Terron <git@terron.me>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "dev": "nodemon --ext js,ts --exec ts-node node_modules/jasmine/bin/jasmine"
+  },
+  "dependencies": {
+    "rxjs": "^6.4.0"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.3.8",
+    "jasmine": "^3.3.1"
+  }
+}
