@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 
 import { testInputOutput } from './helpers/helpers';
 
-import { filterUnchanged } from '..';
+import { filterUnchanged } from '../src/index';
 
 describe("Filter Unchanged", () => {
     let subject: Subject<any>;

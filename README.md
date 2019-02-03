@@ -18,6 +18,8 @@ Filter unchanged values to avoid re-processing for the same input
 ### Usage:
 
 ```ts
+import { filterUnchangable } from 'rxjs-optimizer';
+
 observable.pipe(filterUnchanged());
 observable.pipe(filterUnchanged((a,b) => a !== b)); // custom change check
 ```
@@ -25,6 +27,8 @@ observable.pipe(filterUnchanged((a,b) => a !== b)); // custom change check
 ### Parameters and Options:
 
 ```ts
+import { filterUnchangable } from 'rxjs-optimizer';
+
 filterUnchangable(
     /**
      * [optional] Method to determine if the value has changed
@@ -42,6 +46,8 @@ Given a list of operators (eg. `map()`, `filter()`, `switchMap()`, ...), it will
 ### Usage:
 
 ```ts
+import { cachePipe } from 'rxjs-optimizer';
+
 observable.pipe(cachePipe(...operators));
 
 // custom options
@@ -52,6 +58,8 @@ observable.pipe(smallCache(...operators));
 ### Parameters and Options:
 
 ```ts
+import { cachePipe } from 'rxjs-optimizer';
+
 cachePipe.options({
     /** cacheSize
      * number of input/output pair to keep in the cache
@@ -69,11 +77,22 @@ cachePipe.options({
 })
 ```
 
+
+## Subscribe Once
+
+Normally, the observable will call its internal subscribe function with every new subscription. With this wrapper, the wrapped observable will have at most one subscriber, and the values will be caches and sent out to every subscriber of the `once()` observable wrapper.
+
+If the subscriber count arrives at zero, then the wrapper will unsubscribe from the wrapped observable, and will reset the cache, to avoid extra use of memory or processing.
+
+### Usage:
+
+```ts
+import { once } from 'rxjs-optimizer';
+
+once(observable);
+```
+
 # Other optimizer ideas
-
-### Subscribe Once
-
-wraps an observable, and only subscribes once to it, regardless of how many subscribers the wrapper has
 
 ### Preload
 
