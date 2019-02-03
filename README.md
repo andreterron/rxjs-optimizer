@@ -83,3 +83,10 @@ Similar to cache, but given the preloading inputs, once the first output goes th
 
 Similar to preload, but once it preloads something, it stays subscribed to the other options while the end observable is also subscribed to
 
+## Building, testing and collaborating
+
+* Clone the repo
+* Build: `tsc`
+* Test: `npm test`
+* Watch: `npm run dev`
+* Pull requests are welcome :)

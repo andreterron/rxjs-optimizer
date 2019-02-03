@@ -1,7 +1,9 @@
 import 'jasmine';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { filterUnchanged } from '../src/unchanged';
+import { Subject, Observable } from 'rxjs';
+
 import { testInputOutput } from './helpers/helpers';
+
+import { filterUnchanged } from '..';
 
 describe("Filter Unchanged", () => {
     let subject: Subject<any>;

@@ -2,7 +2,7 @@ import 'jasmine';
 import { Subject, Observable } from 'rxjs';
 import { toArray, switchMap, map } from 'rxjs/operators';
 
-import { cachePipe } from '../src/cache';
+import { cachePipe } from '..';
 
 describe("Cache Pipe", () => {
     let subject: Subject<any>;
