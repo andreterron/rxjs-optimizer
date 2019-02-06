@@ -7,7 +7,12 @@ export interface CachePipeOptions<T = any> {
 }
 
 const DEFAULT_CACHE_OPTIONS: CachePipeOptions<any> = {
-    key: (a: any) => '' + a,
+    key: (a: any): string => {
+        if (typeof a === 'string') return a;
+        if (typeof a === 'number' || typeof a === 'boolean' || typeof a === 'bigint') return '' + a;
+        if (typeof a === 'symbol') return a.toString();
+        return undefined; // functions, objects, null and undefined
+    },
     cacheSize: 10
 }
 
@@ -28,6 +33,7 @@ export type OperationsWrapper = {
 function cacheWithOptions<T = any>(options: CachePipeOptions<T>): OperationsWrapper {
 
     let cacheMap: {[k: string]: any} = {};
+    let defaultCache: any = undefined;
     let keyQueue: any[] = [];
 
     let {key, cacheSize} = Object.assign({}, DEFAULT_CACHE_OPTIONS, options);
@@ -35,25 +41,31 @@ function cacheWithOptions<T = any>(options: CachePipeOptions<T>): OperationsWrap
     return (...ops: OperatorFunction<any, any>[]) => {
         return switchMap(sourceData => {
             let input = of(sourceData);
+            let cacheObservable: Observable<any>;
+            let operations = [...ops];
             let k = key(sourceData);
-
-            let addToCache = tap(v => {
-                let index = keyQueue.indexOf(k);
-                if (index !== -1) {
-                    keyQueue.splice(index, 1);
-                }
-                while (keyQueue.length >= cacheSize) {
-                    let deleteKey = keyQueue.shift();
-                    if (deleteKey)
-                        delete cacheMap[deleteKey];
-                }
-                cacheMap[k] = v;
-                keyQueue.push(k);
-            });
+            if (typeof k === 'string') {
+                operations.push(tap(v => {
+                    let index = keyQueue.indexOf(k);
+                    if (index !== -1) {
+                        keyQueue.splice(index, 1);
+                    }
+                    while (keyQueue.length >= cacheSize) {
+                        let deleteKey = keyQueue.shift();
+                        if (deleteKey)
+                            delete cacheMap[deleteKey];
+                    }
+                    cacheMap[k] = v;
+                    keyQueue.push(k);
+                }));
+                cacheObservable = cacheMap[k] ? of(cacheMap[k]) : empty();
+            } else {
+                cacheObservable = empty();
+            }
 
             return concat(
-                cacheMap[k] ? of(cacheMap[k]) : empty(),
-                input.pipe.apply(input, [...ops, addToCache])
+                cacheObservable,
+                input.pipe.apply(input, operations)
             )
         })
     }

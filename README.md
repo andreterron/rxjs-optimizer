@@ -43,6 +43,8 @@ filterUnchangable(
 
 Given a list of operators (eg. `map()`, `filter()`, `switchMap()`, ...), it will cache the final output value given the the initial inputs, so that if the input goes back to a previous input, it will bypass the operators, and send the cached value before running the operators.
 
+If no `key` function option is passed, then it will convert these types to string to use as a cache key: `(string, number, boolean, symbol)`. If it's of a different type, then no caching will be done for that input. This behavior can be customized by passing the `key` option.
+
 ### Usage:
 
 ```ts
@@ -71,25 +73,50 @@ cachePipe.options({
     /** key
      * function to get the key given the object received from the source observable
      * @type: (a:any) => string
-     * @default: (a:any) => '' + a
+     * @default: (see description above)
      */
     key: (a) => a.id
 })
 ```
 
 
-## Subscribe Once
+## Single Subscriber
 
-Normally, the observable will call its internal subscribe function with every new subscription. With this wrapper, the wrapped observable will have at most one subscriber, and the values will be caches and sent out to every subscriber of the `once()` observable wrapper.
+Normally, the observable will call its internal subscribe function with every new subscription. This operator will just subscribe once to the source observable, optionally cache the last value, and send the value to all the subscribers of the resulting observable.
 
-If the subscriber count arrives at zero, then the wrapper will unsubscribe from the wrapped observable, and will reset the cache, to avoid extra use of memory or processing.
+By default, if the subscriber count arrives at zero, then the wrapper will unsubscribe from the wrapped observable, and will reset the cache, to avoid extra use of memory or processing. This behavior can be customized using the `cache` option
 
 ### Usage:
 
 ```ts
-import { once } from 'rxjs-optimizer';
+import { singleSubscriber } from 'rxjs-optimizer';
 
-once(observable);
+observable.pipe(singleSubscriber());
+
+observable.pipe(singleSubscriber({cache: 'none'}));
+observable.pipe(singleSubscriber({cache: 'subscribed'})); // default
+observable.pipe(singleSubscriber({cache: 'keep'}));
+```
+
+### Parameters and Options:
+
+```ts
+import { singleSubscriber } from 'rxjs-optimizer';
+
+singleSubscriber({
+    /**
+     * [optional] Enum to determine how the value should be cached:
+     *      - 'none'       : Subscribers only receive values emitted while subscribed
+     *      - 'subscribed' : If the observable already had a subscriber, then new subscribers
+     *                       will receive the last emitted value when they begin subscribing.
+     *                       but once all subscribers unsubscribe, the cache is cleared.
+     *      - 'keep'       : Caches the last value emitted, and emits it for new subscribers,
+     *                       the value is kept in the cache even if all subscribers unsubscribe.
+     * @type: 'none' | 'subscribed' | 'keep'
+     * @default: 'subscribed'
+     */
+    cache: 'subscribed'
+})
 ```
 
 # Other optimizer ideas
