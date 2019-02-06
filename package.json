@@ -1,6 +1,6 @@
 {
   "name": "rxjs-optimizer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Optimizer operations for RxJs",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine",
-    "dev": "nodemon --ext js,ts --exec ts-node node_modules/jasmine/bin/jasmine"
+    "dev": "nodemon --ext js,ts --exec ts-node node_modules/jasmine/bin/jasmine",
+    "prepublish": "npm test && tsc"
   },
   "dependencies": {
     "rxjs": "^6.4.0"
