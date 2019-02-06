@@ -1,6 +1,6 @@
 {
   "name": "rxjs-optimizer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Optimizer operations for RxJs",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -8,6 +8,10 @@
   "author": "Andre Terron <git@terron.me>",
   "license": "MIT",
   "private": false,
+  "files": [
+    "/lib",
+    "/src"
+  ],
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine",
     "dev": "nodemon --ext js,ts --exec ts-node node_modules/jasmine/bin/jasmine"
